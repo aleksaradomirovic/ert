@@ -12,5 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL TRUE)
-link_libraries(ecr-core)
+add_library(
+    ecr-io
+        src/stream/posix.c
+)
+target_include_directories(
+    ecr-io
+    PUBLIC
+        include
+)
+target_link_libraries(
+    ecr-io
+    PUBLIC
+        ecr-core
+)
+
+add_subdirectory(examples)

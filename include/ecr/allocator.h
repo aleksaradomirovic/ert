@@ -86,7 +86,7 @@ static ecr_status_t ecr_free(ecr_allocator_t *allocator, void *mem) {
  * @param mem_size see {@link ecr_allocator_alloc_fn_t}
  * @return status code
  *
- * @see ecr_allocator_free_fn_t
+ * @see ecr_allocator_alloc_fn_t
  */
 [[maybe_unused]]
 static ecr_status_t ecr_allocate(ecr_allocator_t *allocator, void **mem_ptr, size_t mem_size) {

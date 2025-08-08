@@ -43,6 +43,15 @@ typedef enum : uint_least32_t {
     ECR_ERROR_NOT_SUPPORTED    = ECR_ERROR_TYPE_USER_CALL + 0x1,
     /// invalid argument provided
     ECR_ERROR_INVALID_ARGUMENT = ECR_ERROR_TYPE_USER_CALL + 0x2,
+
+    /// \cond
+    ECR_ERROR_TYPE_IO     = 0x30, /// \endcond
+    /// general i/o error
+    ECR_ERROR_IO          = ECR_ERROR_TYPE_IO + 0x0,
+    /// end of file error
+    ECR_ERROR_EOF         = ECR_ERROR_TYPE_IO + 0x1,
+    /// full buffer
+    ECR_ERROR_FULL_BUFFER = ECR_ERROR_TYPE_IO + 0x2,
 } ecr_status_t;
 
 /**

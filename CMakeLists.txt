@@ -23,8 +23,6 @@ option(BUILD_DOCS "Generate documentation" OFF)
 option(BUILD_TESTING "Build tests" OFF)
 
 if(BUILD_DOCS)
-    add_custom_target(docs)
-
     find_package(Doxygen REQUIRED)
     set(DOXYGEN_FILE_PATTERNS *.h)
     set(DOXYGEN_EXTRACT_ALL YES)
@@ -54,10 +52,12 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
+add_subdirectory(libs/io)
+
 if(BUILD_DOCS)
     doxygen_add_docs(
-        ecr-core-docs
+        docs
         include
+        libs/io/include
     )
-    add_dependencies(docs ecr-core-docs)
 endif()

@@ -13,4 +13,14 @@
 # limitations under the License.
 
 set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL TRUE)
-link_libraries(ecr-core)
+link_libraries(ecr-io)
+
+add_executable(
+    io_example_helloworld
+        helloworld/helloworld.c
+)
+
+add_executable(
+    io_example_echo
+        echo/echo.c
+)

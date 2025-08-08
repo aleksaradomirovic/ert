@@ -60,6 +60,12 @@ const char * ecr_status_string(ecr_status_t status) {
             return "operation not supported";
         case ECR_ERROR_INVALID_ARGUMENT:
             return "invalid argument provided";
+        
+        case ECR_ERROR_IO:
+            return "i/o error";
+        case ECR_ERROR_EOF:
+            return "end of stream reached";
+
         default:
             return UNKNOWN_STATUS_STRING;
     }
@@ -73,6 +79,10 @@ ecr_status_t ecr_get_system_error() {
             return ECR_ERROR_INVALID_ARGUMENT;
         case ENOTSUP:
             return ECR_ERROR_NOT_SUPPORTED;
+        case EIO:
+            return ECR_ERROR_IO;
+        case ENOBUFS:
+            return ECR_ERROR_FULL_BUFFER;
     }
 
     return ECR_ERROR_SYSTEM;
