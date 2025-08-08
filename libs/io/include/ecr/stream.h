@@ -120,10 +120,10 @@ static ecr_status_t ecr_stream_read(ecr_stream_t *stream, void *memory, size_t *
         .length   = *length,
     };
 
-    ECR_STATUS_GUARD(ecr_stream_readbuf(stream, &buffer));
+    ecr_status_t status = ecr_stream_readbuf(stream, &buffer);
 
     *length = buffer.position;
-    return ECR_SUCCESS;
+    return status;
 }
 
 /**
@@ -173,10 +173,10 @@ static ecr_status_t ecr_stream_read_full(ecr_stream_t *stream, void *memory, siz
         .length   = *length,
     };
 
-    ECR_STATUS_GUARD(ecr_stream_readbuf_full(stream, &buffer));
+    ecr_status_t status = ecr_stream_readbuf_full(stream, &buffer);
 
     *length = buffer.position;
-    return ECR_SUCCESS;
+    return status;
 }
 
 /**
@@ -217,10 +217,10 @@ static ecr_status_t ecr_stream_write(ecr_stream_t *stream, void *memory, size_t 
         .length   = *length,
     };
 
-    ECR_STATUS_GUARD(ecr_stream_writebuf(stream, &buffer));
+    ecr_status_t status = ecr_stream_writebuf(stream, &buffer);
 
     *length = buffer.position;
-    return ECR_SUCCESS;
+    return status;
 }
 
 /**
@@ -270,10 +270,10 @@ static ecr_status_t ecr_stream_write_full(ecr_stream_t *stream, void *memory, si
         .length   = *length,
     };
 
-    ECR_STATUS_GUARD(ecr_stream_writebuf_full(stream, &buffer));
+    ecr_status_t status = ecr_stream_writebuf_full(stream, &buffer);
 
     *length = buffer.position;
-    return ECR_SUCCESS;
+    return status;
 }
 
 /**
