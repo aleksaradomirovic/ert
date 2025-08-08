@@ -17,31 +17,14 @@
 #include <ecr/stream/fd.h>
 
 int main() {
-    ecr_stream_t stream_in, stream_out;
-    if(ecr_stream_from_fd(&stream_in, STDIN_FILENO)) {
+    char inbuf[8192];
+    size_t length = sizeof(inbuf);
+    if(ecr_stream_read(&ecr_stdin, inbuf, &length)) {
         return 1;
     }
 
-    if(ecr_stream_from_fd(&stream_out, STDOUT_FILENO)) {
+    if(ecr_stream_write_full(&ecr_stdout, inbuf, &length)) {
         return 2;
-    }
-
-    char inbuf[8192];
-    size_t length = sizeof(inbuf);
-    if(ecr_stream_read(&stream_in, inbuf, &length)) {
-        return 3;
-    }
-
-    if(ecr_stream_write_full(&stream_out, inbuf, &length)) {
-        return 4;
-    }
-
-    if(ecr_stream_close(&stream_out)) {
-        return 5;
-    }
-
-    if(ecr_stream_close(&stream_in)) {
-        return 6;
     }
 
     return 0;

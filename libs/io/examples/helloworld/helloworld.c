@@ -19,23 +19,12 @@
 #include <ecr/stream/fd.h>
 
 int main() {
-    ecr_stream_t stream;
-    if(ecr_stream_from_fd(&stream, STDOUT_FILENO)) {
+    const char *message = "Hello World!\n";
+    size_t length = strlen(message);
+
+    if(ecr_stream_write_full(&ecr_stdout, (void *) message, &length)) {
         return 1;
     }
 
-    const char *message = "Hello World!\n";
-    size_t length = strlen(message);
-    if(ecr_stream_write_full(&stream, (void *) message, &length)) {
-        return 2;
-    }
-
-    if(length != strlen(message)) {
-        return 3;
-    }
-
-    if(ecr_stream_close(&stream)) {
-        return 4;
-    }
     return 0;
 }

@@ -29,12 +29,16 @@ extern "C" {
  * Potentially hints to the compiler that a conforming program would always evaluate
  * this **expression** as true here. 
  */
-#ifdef __clang__
-#   define ecr_assume(expression) { __builtin_assume(expression); }
-#elifdef __glibc__
-#   define ecr_assume(expression) { if(!(expression)) { __builtin_unreachable(); } }
+#ifdef ECR_FEATURE_ASSUMPTIONS
+#   ifdef __clang__
+#       define ecr_assume(expression) { __builtin_assume(expression); }
+#   elifdef __glibc__
+#       define ecr_assume(expression) { if(!(expression)) { __builtin_unreachable(); } }
+#   else
+#       define ecr_assume(expression) { (void) (expression); }
+#   endif
 #else
-#   define ecr_assume(expression)
+#   define ecr_assume(expression) { (void) (expression); }
 #endif
 
 /**

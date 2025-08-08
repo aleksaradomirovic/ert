@@ -311,6 +311,15 @@ static ecr_status_t ecr_stream_close(ecr_stream_t *stream) {
     return stream->close(stream->data);
 }
 
+/// Stream corresponding to standard input.
+extern ecr_stream_t ecr_stdin;
+
+/// Stream corresponding to standard output.
+extern ecr_stream_t ecr_stdout;
+
+/// Stream corresponding to standard error.
+extern ecr_stream_t ecr_stderr;
+
 
 #ifdef __cplusplus
 }
