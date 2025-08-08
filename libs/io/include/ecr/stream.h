@@ -358,6 +358,35 @@ static ecr_status_t ecr_stream_close(ecr_stream_t *stream) {
     return stream->close(stream->data);
 }
 
+/**
+ * Learn a stream's positon.
+ *
+ * @param stream stream to query for position
+ * @param position pointer to the position value to be returned
+ *
+ * @return error code
+ */
+[[maybe_unused]]
+static ecr_status_t ecr_stream_getpos(ecr_stream_t *stream, ecr_stream_pos_t *restrict position) {
+    return stream->getpos(stream->data, position);
+}
+
+/**
+ * Set/move a stream's positon.
+ *
+ * @param stream stream to set position for
+ * @param position pointer to the position value to be read;
+ * it will contain the stream's position after a successful return as if
+ * {@link ecr_stream_getpos} were called.
+ * @param direction direction to set/move in
+ *
+ * @return error code
+ */
+[[maybe_unused]]
+static ecr_status_t ecr_stream_setpos(ecr_stream_t *stream, ecr_stream_pos_t *restrict position, ecr_stream_dir_t direction) {
+    return stream->setpos(stream->data, position, direction);
+}
+
 /// Stream corresponding to standard input.
 extern ecr_stream_t ecr_stdin;
 

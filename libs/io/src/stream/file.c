@@ -49,7 +49,16 @@ ecr_status_t ecr_stream_open_file(ecr_stream_t *stream, const char *pathname, ec
         fcntl_flags |= O_APPEND;
     }
 
-    int fd = open(pathname, fcntl_flags);
+    if(mode_flags & ECR_FILEMODE_CREATE) {
+        fcntl_flags |= O_CREAT;
+    }
+
+    int fd;
+    if(fcntl_flags & O_CREAT) {
+        fd = open(pathname, fcntl_flags, 0600);
+    } else {
+        fd = open(pathname, fcntl_flags);
+    }
     if(fd < 0) {
         return ecr_get_system_error();
     }

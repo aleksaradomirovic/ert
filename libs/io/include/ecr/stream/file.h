@@ -43,6 +43,9 @@ typedef enum : uint_least32_t {
     ECR_FILEMODE_READ_WRITE = (ECR_FILEMODE_READ_ONLY | ECR_FILEMODE_WRITE_ONLY),
     /// Append on write
     ECR_FILEMODE_APPEND     = (1 << 2),
+
+    /// Create file if nonexistent
+    ECR_FILEMODE_CREATE     = (1 << 8),
 } ecr_filemode_t;
 
 /**
