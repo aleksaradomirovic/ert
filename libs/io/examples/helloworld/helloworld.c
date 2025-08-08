@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-#include <string.h>
-
-#include <ecr/stream/fd.h>
+#include <ecr/stream/formatted.h>
 
 int main() {
-    const char *message = "Hello World!\n";
-    size_t length = strlen(message);
-
-    if(ecr_stream_write_full(&ecr_stdout, (void *) message, &length)) {
+    if(ecr_stream_printf(&ecr_stdout, "Hello World!\n")) {
         return 1;
     }
 

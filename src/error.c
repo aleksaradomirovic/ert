@@ -24,6 +24,10 @@
 static thread_local int syserrnum = 0;
 
 static const char * ecr_status_string_system(int errnum) {
+    if(errnum == 0) {
+        return UNKNOWN_STATUS_STRING;
+    }
+
     const char *errstr;
 # if __GLIBC__ > 2 || (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 32)
     errstr = strerrordesc_np(errnum);

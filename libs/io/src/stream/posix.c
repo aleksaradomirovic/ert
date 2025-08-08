@@ -19,9 +19,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <ecr/error.h>
-#include <ecr/stream.h>
-#include <ecr/stream/fd.h>
+#include "ecr/error.h"
+#include "ecr/stream.h"
+#include "ecr/stream/fd.h"
 
 static int * ecr_stream_get_fd_ptr(ecr_stream_t *stream) {
     return (int *)(&stream->data);

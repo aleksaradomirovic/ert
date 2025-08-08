@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <ecr/stream/fd.h>
+#include <ecr/stream.h>
 
 int main() {
     char inbuf[8192];
