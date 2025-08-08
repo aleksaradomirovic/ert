@@ -33,7 +33,7 @@ extern "C" {
  * @see {@link ecr_allocator_free_fn_t}
  */
 [[maybe_unused]]
-static ecr_status_t ecr_allocator_standard_free(void *data, void *mem) {
+static ecr_status_t ecr_allocator_standard_free(void *, void *mem) {
     free(mem);
     return ECR_SUCCESS;
 }
@@ -44,7 +44,7 @@ static ecr_status_t ecr_allocator_standard_free(void *data, void *mem) {
  * @see {@link ecr_allocator_alloc_fn_t}
  */
 [[maybe_unused]]
-static ecr_status_t ecr_allocator_standard_alloc(void *data, void **mem_ptr, size_t mem_size) {
+static ecr_status_t ecr_allocator_standard_alloc(void *, void **mem_ptr, size_t mem_size) {
     void *mem = malloc(mem_size);
     if(!mem) {
         return ecr_get_system_error();

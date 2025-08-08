@@ -20,6 +20,7 @@
 
 #include <ecr/buffer.h>
 #include <ecr/error.h>
+#include <ecr/macro/assume.h>
 #include <ecr/macro/guards.h>
 #include <ecr/version.h>
 
@@ -95,7 +96,17 @@ struct ecr_stream {
  */
 [[maybe_unused]]
 static ecr_status_t ecr_stream_readbuf(ecr_stream_t *stream, ecr_buffer_t *restrict buffer) {
-    return stream->readbuf(stream->data, buffer);
+    void *memory = buffer->memory;
+    size_t capacity = buffer->capacity;
+    size_t length = buffer->length;
+
+    ecr_status_t status = stream->readbuf(stream->data, buffer);
+
+    ecr_assert(buffer->memory == memory);
+    ecr_assert(buffer->capacity == capacity);
+    ecr_assert(buffer->length == length);
+
+    return status;
 }
 
 /**
@@ -192,7 +203,17 @@ static ecr_status_t ecr_stream_read_full(ecr_stream_t *stream, void *memory, siz
  */
 [[maybe_unused]]
 static ecr_status_t ecr_stream_writebuf(ecr_stream_t *stream, ecr_buffer_t *restrict buffer) {
-    return stream->writebuf(stream->data, buffer);
+    void *memory = buffer->memory;
+    size_t capacity = buffer->capacity;
+    size_t length = buffer->length;
+
+    ecr_status_t status = stream->writebuf(stream->data, buffer);
+
+    ecr_assert(buffer->memory == memory);
+    ecr_assert(buffer->capacity == capacity);
+    ecr_assert(buffer->length == length);
+
+    return status;
 }
 
 /**
