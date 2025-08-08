@@ -28,7 +28,7 @@ ecr_status_t ecr_stream_vprintf(ecr_stream_t *stream, const char *format, va_lis
         return ecr_get_system_error();
     }
     if(size == INT_MAX) {
-        return ECR_ERROR_FULL_BUFFER;
+        return ECR_ERROR_TYPE_OVERFLOW;
     }
 
     char buffer[size + 1];

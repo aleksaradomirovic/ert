@@ -28,6 +28,27 @@
 extern "C" {
 #endif
 
+
+/**
+ * Type for holding the value of a position in a stream.
+ */
+typedef uint_least64_t ecr_stream_pos_t;
+
+/**
+ * Type for defining a directional mode for a {@link ecr_stream_pos_t}.
+ */
+typedef enum {
+    /// skip forward in the stream
+    ECR_STREAM_DIR_SKIP   = (0 << 0),
+    /// rewind backward in the stream
+    ECR_STREAM_DIR_REWIND = (1 << 0),
+
+    /// skip starting from the beginning of the stream
+    ECR_STREAM_DIR_START  = (1 << 1) | ECR_STREAM_DIR_SKIP,
+    /// rewind starting from the end of the stream
+    ECR_STREAM_DIR_END    = (1 << 1) | ECR_STREAM_DIR_REWIND,
+} ecr_stream_dir_t;
+
 /**
  * Struct to represent an I/O stream.
  * @param version implementation-defined version
@@ -73,6 +94,29 @@ typedef ecr_status_t ecr_stream_writebuf_fn_t(void *data, ecr_buffer_t *restrict
  */
 typedef ecr_status_t ecr_stream_close_fn_t(void *data);
 
+/**
+ * A stream function template to learn a stream's positon.
+ *
+ * @param data data pointer belonging to the stream
+ * @param position pointer to the position value to be returned
+ *
+ * @return error code
+ */
+typedef ecr_status_t ecr_stream_getpos_fn_t(void *data, ecr_stream_pos_t *restrict position);
+
+/**
+ * A stream function template to set/move a stream's positon.
+ *
+ * @param data data pointer belonging to the stream
+ * @param position pointer to the position value to be read;
+ * it will contain the stream's position after a successful return as if
+ * {@link ecr_stream_getpos_fn_t} were called.
+ * @param direction direction to set/move in
+ *
+ * @return error code
+ */
+typedef ecr_status_t ecr_stream_setpos_fn_t(void *data, ecr_stream_pos_t *restrict position, ecr_stream_dir_t direction);
+
 struct ecr_stream {
     ecr_version_t version;
     void *data;
@@ -81,6 +125,9 @@ struct ecr_stream {
     ecr_stream_writebuf_fn_t *writebuf;
 
     ecr_stream_close_fn_t *close;
+
+    ecr_stream_getpos_fn_t *getpos;
+    ecr_stream_setpos_fn_t *setpos;
 };
 
 /**

@@ -45,7 +45,12 @@ typedef enum : uint_least32_t {
     ECR_ERROR_INVALID_ARGUMENT = ECR_ERROR_TYPE_USER_CALL + 0x2,
 
     /// \cond
-    ECR_ERROR_TYPE_IO     = 0x30, /// \endcond
+    ECR_ERROR_TYPE_LOGICAL  = 0x20, /// \endcond
+    /// numerical overflow
+    ECR_ERROR_TYPE_OVERFLOW = ECR_ERROR_TYPE_LOGICAL + 0x1,
+
+    /// \cond
+    ECR_ERROR_TYPE_IO     = 0x40, /// \endcond
     /// general i/o error
     ECR_ERROR_IO          = ECR_ERROR_TYPE_IO + 0x0,
     /// end of file error

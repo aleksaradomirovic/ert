@@ -14,8 +14,9 @@
 
 add_library(
     ecr-io
+        src/stream/fd.c
+        src/stream/file.c
         src/stream/formatted.c
-        src/stream/posix.c
 )
 target_include_directories(
     ecr-io

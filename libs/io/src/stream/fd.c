@@ -15,17 +15,15 @@
  */
 
 #include <limits.h>
+#include <stdckdint.h>
 
-#include <stdlib.h>
 #include <unistd.h>
 
 #include "ecr/error.h"
 #include "ecr/stream.h"
 #include "ecr/stream/fd.h"
 
-static int * ecr_stream_get_fd_ptr(ecr_stream_t *stream) {
-    return (int *)(&stream->data);
-}
+#include "posix.h"
 
 static ecr_status_t ecr_stream_fd_readbuf(void *data, ecr_buffer_t *restrict buffer) {
     int fd = *(int *)(&data);
@@ -79,16 +77,71 @@ static ecr_status_t ecr_stream_fd_close(void *data) {
     return ECR_SUCCESS;
 }
 
-static void ecr_stream_from_fd_nodup(ecr_stream_t *stream, int fd) {
-    *stream = (ecr_stream_t) {
-        .version = 0,
+static ecr_status_t ecr_stream_fd_getpos(void *data, ecr_stream_pos_t *restrict position_ptr) {
+    int fd = *(int *)(&data);
+    
+    off_t offset = lseek(fd, 0, SEEK_CUR);
+    if(offset < 0) {
+        return ecr_get_system_error();
+    }
 
-        .readbuf  = ecr_stream_fd_readbuf,
-        .writebuf = ecr_stream_fd_writebuf,
-        .close    = ecr_stream_fd_close,
-    };
+    ecr_stream_pos_t position;
+    if(ckd_add(&position, 0, offset)) {
+        return ECR_ERROR_TYPE_OVERFLOW;
+    }
 
-    *ecr_stream_get_fd_ptr(stream) = fd;
+    *position_ptr = position;
+    return ECR_SUCCESS;
+}
+
+static ecr_status_t ecr_stream_fd_setpos(void *data, ecr_stream_pos_t *restrict position_ptr, ecr_stream_dir_t direction) {
+    int fd = *(int *)(&data);
+    ecr_stream_pos_t position = *position_ptr;
+
+    off_t offset;
+    if(direction & ECR_STREAM_DIR_REWIND) {
+        if(ckd_sub(&offset, 0, position)) {
+            return ECR_ERROR_TYPE_OVERFLOW;
+        }
+    } else {
+        if(ckd_add(&offset, 0, position)) {
+            return ECR_ERROR_TYPE_OVERFLOW;
+        }
+    }
+
+    int whence;
+    if(direction & (1 << 1)) {
+        if(direction & ECR_STREAM_DIR_REWIND) {
+            whence = SEEK_END;
+        } else {
+            whence = SEEK_SET;
+        }
+    } else {
+        whence = SEEK_CUR;
+    }
+
+    off_t result = lseek(fd, offset, whence);
+    if(result < 0) {
+        return ecr_get_system_error();
+    }
+
+    if(ckd_add(&position, 0, result)) {
+        return ECR_ERROR_TYPE_OVERFLOW;
+    }
+
+    *position_ptr = position;
+    return ECR_SUCCESS;
+}
+
+void ecr_stream_from_fd_nodup(ecr_stream_t *stream, int fd) {
+    stream->version = 0;
+    *(int *)(&stream->data) = fd;
+
+    stream->readbuf  = ecr_stream_fd_readbuf;
+    stream->writebuf = ecr_stream_fd_writebuf;
+    stream->close    = ecr_stream_fd_close;
+    stream->getpos   = ecr_stream_fd_getpos;
+    stream->setpos   = ecr_stream_fd_setpos;
 }
 
 ecr_status_t ecr_stream_from_fd(ecr_stream_t *stream, int fd) {

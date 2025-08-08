@@ -22,6 +22,8 @@ option(BUILD_SHARED_LIBS "Build as shared library" ON)
 option(BUILD_DOCS "Generate documentation" OFF)
 option(BUILD_TESTING "Build tests" OFF)
 
+set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
+
 if(BUILD_DOCS)
     find_package(Doxygen REQUIRED)
     set(DOXYGEN_FILE_PATTERNS *.h)

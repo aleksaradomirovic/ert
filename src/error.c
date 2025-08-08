@@ -87,6 +87,8 @@ ecr_status_t ecr_get_system_error() {
             return ECR_ERROR_IO;
         case ENOBUFS:
             return ECR_ERROR_FULL_BUFFER;
+        case EOVERFLOW:
+            return ECR_ERROR_TYPE_OVERFLOW;
     }
 
     return ECR_ERROR_SYSTEM;
