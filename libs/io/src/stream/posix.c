@@ -79,12 +79,7 @@ static ecr_status_t ecr_stream_fd_close(void *data) {
     return ECR_SUCCESS;
 }
 
-ecr_status_t ecr_stream_from_fd(ecr_stream_t *stream, int fd) {
-    fd = dup(fd);
-    if(fd < 0) {
-        return ecr_get_system_error();
-    }
-
+static void ecr_stream_from_fd_nodup(ecr_stream_t *stream, int fd) {
     *stream = (ecr_stream_t) {
         .version = 0,
 
@@ -94,6 +89,15 @@ ecr_status_t ecr_stream_from_fd(ecr_stream_t *stream, int fd) {
     };
 
     *ecr_stream_get_fd_ptr(stream) = fd;
+}
+
+ecr_status_t ecr_stream_from_fd(ecr_stream_t *stream, int fd) {
+    fd = dup(fd);
+    if(fd < 0) {
+        return ecr_get_system_error();
+    }
+
+    ecr_stream_from_fd_nodup(stream, fd);
     return ECR_SUCCESS;
 }
 
@@ -103,22 +107,7 @@ ecr_stream_t ecr_stderr;
 
 __attribute__((constructor))
 void ert_setup_standard_streams() {
-    if(ecr_stream_from_fd(&ecr_stdin, STDIN_FILENO)) {
-        abort();
-    }
-
-    if(ecr_stream_from_fd(&ecr_stdout, STDOUT_FILENO)) {
-        abort();
-    }
-
-    if(ecr_stream_from_fd(&ecr_stderr, STDERR_FILENO)) {
-        abort();
-    }
-}
-
-__attribute__((destructor))
-void ert_cleanup_standard_streams() {
-    ecr_stream_close(&ecr_stdin);
-    ecr_stream_close(&ecr_stdout);
-    ecr_stream_close(&ecr_stderr);
+    ecr_stream_from_fd_nodup(&ecr_stdin, STDIN_FILENO);
+    ecr_stream_from_fd_nodup(&ecr_stdout, STDOUT_FILENO);
+    ecr_stream_from_fd_nodup(&ecr_stderr, STDERR_FILENO);
 }
