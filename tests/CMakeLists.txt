@@ -14,3 +14,14 @@
 
 set_directory_properties(PROPERTIES EXCLUDE_FROM_ALL TRUE)
 link_libraries(ecr-core)
+
+add_executable(
+    allocator_test
+        allocator/standard_allocator_test.cpp
+)
+target_link_libraries(
+    allocator_test
+        GTest::gtest
+        GTest::gtest_main
+)
+gtest_discover_tests(allocator_test)
